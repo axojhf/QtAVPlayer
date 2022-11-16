@@ -45,6 +45,8 @@ public:
     void abort(bool stop = true);
     int load(const QString &url, QAVIODevice *dev = nullptr);
     void unload();
+    void setCookies(const QString &cookies);
+    void setUserAgents(const QString &userAgents);
 
     QAVStream stream(int index) const;
     QList<QAVStream> videoStreams() const;

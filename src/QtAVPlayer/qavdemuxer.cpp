@@ -85,6 +85,8 @@ public:
     bool eof = false;
     QList<QAVPacket> packets;
     QString bsfs;
+    QString cookies;
+    QString userAgents;
 };
 
 static int decode_interrupt_cb(void *ctx)
@@ -370,7 +372,12 @@ int QAVDemuxer::load(const QString &url, QAVIODevice *dev)
         }
     }
     locker.unlock();
-    int ret = avformat_open_input(&d->ctx, parsed.input.toUtf8().constData(), inputFormat, nullptr);
+    AVDictionary *opts = nullptr;
+    if (userAgents.length() > 0)
+        av_dict_set(&opts, "user_agent", userAgents.toStdString().c_str(), 0);
+    if(cookies.length() > 0)
+        av_dict_set(&opts, "cookies", cookies.toStdString().c_str(), 0);
+    int ret = avformat_open_input(&d->ctx, parsed.input.toUtf8().constData(), inputFormat, &opts);
     if (ret < 0)
         return ret;
 
@@ -750,6 +757,17 @@ QStringList QAVDemuxer::supportedBitstreamFilters()
         result.append(QString::fromUtf8(bsf->name));
 #endif
     return result;
+}
+
+void QAVDemuxer::setCookies(const QString &cookies)
+{
+    Q_D(QAVDemuxer);
+    d->cookies = cookies;
+}
+void QAVDemuxer::setUserAgents(const QString &userAgents)
+{
+    Q_D(QAVDemuxer);
+    d->userAgents = userAgents;
 }
 
 QT_END_NAMESPACE

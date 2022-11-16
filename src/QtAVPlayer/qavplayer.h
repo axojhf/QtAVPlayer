@@ -86,6 +86,9 @@ public:
     bool isSynced() const;
     void setSynced(bool sync);
 
+    void setCookies(const QString &cookies);
+    void setUserAgents(const QString &userAgents);
+
 public Q_SLOTS:
     void play();
     void pause();

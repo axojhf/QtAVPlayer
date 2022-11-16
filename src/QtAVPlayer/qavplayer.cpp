@@ -134,6 +134,8 @@ public:
 
     QString filterDesc;
     QScopedPointer<QAVFilterGraph> filterGraph;
+    QString cookies;
+    QString userAgents;
 };
 
 static QString err_str(int err)
@@ -509,6 +511,8 @@ void QAVPlayerPrivate::doLoad()
 {
     demuxer.abort(false);
     demuxer.unload();
+    demuxer.setCookies(cookies);
+    demuxer.setUserAgents(userAgents);
     int ret = demuxer.load(url, dev.data());
     if (ret < 0) {
         setError(QAVPlayer::ResourceError, err_str(ret));
@@ -1101,6 +1105,23 @@ void QAVPlayer::setSynced(bool sync)
 
     d->synced = sync;
     emit syncedChanged(sync);
+}
+
+void QAVPlayer::setCookies(const QString &cookies)
+{
+    Q_D(QAVPlayer);
+    if (d->cookies == cookies)
+        return;
+
+    d->cookies = cookies;
+}
+void QAVPlayer::setUserAgents(const QString &userAgents)
+{
+    Q_D(QAVPlayer);
+    if (d->userAgents == userAgents)
+        return;
+
+    d->userAgents = userAgents;
 }
 
 #ifndef QT_NO_DEBUG_STREAM
