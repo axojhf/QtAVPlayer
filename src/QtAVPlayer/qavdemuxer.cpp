@@ -373,10 +373,10 @@ int QAVDemuxer::load(const QString &url, QAVIODevice *dev)
     }
     locker.unlock();
     AVDictionary *opts = nullptr;
-    if (userAgents.length() > 0)
-        av_dict_set(&opts, "user_agent", userAgents.toStdString().c_str(), 0);
-    if(cookies.length() > 0)
-        av_dict_set(&opts, "cookies", cookies.toStdString().c_str(), 0);
+    if (d->userAgents.length() > 0)
+        av_dict_set(&opts, "user_agent", d->userAgents.toStdString().c_str(), 0);
+    if(d->cookies.length() > 0)
+        av_dict_set(&opts, "cookies", d->cookies.toStdString().c_str(), 0);
     int ret = avformat_open_input(&d->ctx, parsed.input.toUtf8().constData(), inputFormat, &opts);
     if (ret < 0)
         return ret;
